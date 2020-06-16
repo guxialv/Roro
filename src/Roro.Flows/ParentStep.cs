@@ -1,0 +1,34 @@
+﻿using System.Linq;
+using System.Text.Json;
+
+namespace Roro.Flows
+{
+    public abstract class ParentStep : Step
+    {
+        protected ParentStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        {
+            Steps = new StepCollection(this);
+        }
+
+        protected ParentStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection)
+        {
+            Steps = new StepCollection(this, jsonElement.GetProperty(nameof(Steps)));
+        }
+
+        public override void ToJson(Utf8JsonWriter writer)
+        {
+            writer.WriteStartObject();
+            writer.WriteString(nameof(Type), Type);
+            writer.WritePropertyName(nameof(Steps));
+            Steps.ToJson(writer);
+            writer.WriteEndObject();
+        }
+
+        public StepCollection Steps { get; }
+
+        protected Step? GetFirstStep()
+        {
+            return Steps.FirstOrDefault();
+        }
+    }
+}

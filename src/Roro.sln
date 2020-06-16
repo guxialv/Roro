@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Blazor", "Roro.Blazor\Roro.Blazor.csproj", "{5AD6EB71-AAC9-4875-81AD-C36441CF24D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roro.Blazor", "Roro.Blazor\Roro.Blazor.csproj", "{5AD6EB71-AAC9-4875-81AD-C36441CF24D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roro.Flows", "Roro.Flows\Roro.Flows.csproj", "{A0F6E9E5-0AB8-40AA-B8DD-F00CB57503C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Tester", "Roro.Tester\Roro.Tester.csproj", "{97CBC3DE-CE15-4ECC-9138-D14A37E3E994}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{5AD6EB71-AAC9-4875-81AD-C36441CF24D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AD6EB71-AAC9-4875-81AD-C36441CF24D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AD6EB71-AAC9-4875-81AD-C36441CF24D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0F6E9E5-0AB8-40AA-B8DD-F00CB57503C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F6E9E5-0AB8-40AA-B8DD-F00CB57503C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F6E9E5-0AB8-40AA-B8DD-F00CB57503C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F6E9E5-0AB8-40AA-B8DD-F00CB57503C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97CBC3DE-CE15-4ECC-9138-D14A37E3E994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97CBC3DE-CE15-4ECC-9138-D14A37E3E994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97CBC3DE-CE15-4ECC-9138-D14A37E3E994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97CBC3DE-CE15-4ECC-9138-D14A37E3E994}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
