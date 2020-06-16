@@ -33,6 +33,12 @@ namespace Roro.Flows
 
         public string Path { get; }
 
+        public FlowInputCollection Inputs { get; }
+
+        public FlowOutputCollection Outputs { get; }
+
+        public FlowVariableCollection Variables { get; }
+
         public StepCollection Steps { get; }
 
         async Task<ExecutionResult> IExecutable.ExecuteAsync(ExecutionContext context)
