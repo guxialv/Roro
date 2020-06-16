@@ -13,33 +13,24 @@ namespace Roro.Flows.Execution
             _call = call;
         }
 
-        public IExecutable Executable => _call.Executable;
+        internal IExecutable Executable => _call.Executable;
 
-        public bool IsFirstEntry => _call.IsFirstEntry;
+        internal bool IsFirstEntry => _call.IsFirstEntry;
 
-        public bool AllowReentry => _call.AllowReentry;
+        internal bool AllowReentry => _call.AllowReentry;
 
-        public Dictionary<string, object> Globals => _callStack.Globals;
+        internal Dictionary<string, object> Globals => _callStack.Globals;
 
-        public Dictionary<string, object> Locals => _call.Locals;
+        internal Dictionary<string, object> Locals => _call.Locals;
 
-        public Dictionary<string, object> Inputs => _call.Inputs;
+        internal Dictionary<string, object> Inputs => _call.Inputs;
 
-        public Dictionary<string, object> Outputs => _call.Outputs;
+        internal Dictionary<string, object> Outputs => _call.Outputs;
 
-        internal void PushCall(CallStackFrame call)
-        {
-            _callStack.Calls.Push(call);
-        }
+        internal void PushCall(CallStackFrame call) => _callStack.PushCall(call);
 
-        internal CallStackFrame? PeekCall()
-        {
-            return _callStack.Calls.TryPeek(out CallStackFrame call) ? call : null;
-        }
+        internal CallStackFrame? PeekCall() => _callStack.PeekCall();
 
-        internal CallStackFrame? PopCall()
-        {
-            return _callStack.Calls.TryPop(out CallStackFrame call) ? call : null;
-        }
+        internal CallStackFrame? PopCall() => _callStack.PopCall();
     }
 }

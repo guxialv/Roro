@@ -14,16 +14,16 @@ namespace Roro.Flows.Execution
             Outputs = new Dictionary<string, object>();
         }
 
-        public IExecutable Executable { get; }
+        internal IExecutable Executable { get; }
 
-        public bool IsFirstEntry { get; set; }
+        internal bool IsFirstEntry { get; set; }
 
-        public bool AllowReentry { get; set; }
+        internal bool AllowReentry { get; set; }
 
-        public Dictionary<string, object> Locals { get; }
+        internal Dictionary<string, object> Locals { get; }
 
-        public Dictionary<string, object> Inputs { get; }
+        internal Dictionary<string, object> Inputs { get; }
 
-        public Dictionary<string, object> Outputs { get; }
+        internal Dictionary<string, object> Outputs { get; }
     }
 }

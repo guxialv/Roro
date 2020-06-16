@@ -1,15 +1,14 @@
 ﻿using Roro.Flows.Execution;
 using Roro.Flows.Framework;
 using Roro.Flows.Services;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Roro.Flows
 {
     public sealed class FlowApp : ViewModel
     {
-        internal readonly ServiceCollection _services;
         private readonly CallStack _callStack;
+        internal readonly ServiceCollection _services;
 
         public FlowApp()
         {
@@ -21,11 +20,9 @@ namespace Roro.Flows
 
         public FlowCollection Flows { get; }
 
-        public Flow? CurrentFlow => _callStack.Calls.Peek()?.Executable
-                                    is Flow flow ? flow : CurrentStep?._parentStepCollection._parentFlow;
+        public Flow? CurrentFlow => _callStack.CurrentFlow;
 
-        public Step? CurrentStep => _callStack.Calls.Peek()?.Executable
-                                    is Step step ? step : null;
+        public Step? CurrentStep => _callStack.CurrentStep;
 
         public async Task RunAsync() => await _callStack.RunAsnyc();
     }
