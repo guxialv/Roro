@@ -8,15 +8,21 @@ namespace Roro.Flows
     public sealed class FlowApp : ViewModel
     {
         private readonly CallStack _callStack;
-        internal readonly ServiceCollection _services;
 
         public FlowApp()
         {
             _callStack = new CallStack(this);
-            _services = new ServiceCollection();
-            _services.Add<IFlowPickerService>(() => new FlowPickerService());
+            Services = new ServiceCollection();
             Flows = new FlowCollection(this);
+            UseDefaultServices();
         }
+
+        private void UseDefaultServices()
+        {
+            Services.Add<IFlowPickerService>(() => new FlowPickerService());
+        }
+
+        public ServiceCollection Services { get; }
 
         public FlowCollection Flows { get; }
 

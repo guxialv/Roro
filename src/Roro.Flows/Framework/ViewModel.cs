@@ -21,9 +21,32 @@ namespace Roro.Flows.Framework
             return Encoding.UTF8.GetString(ToBytes());
         }
 
-        public virtual void ToJson(Utf8JsonWriter writer)
+        internal virtual void ToJson(Utf8JsonWriter writer)
         {
             JsonSerializer.Serialize(writer, this);
+        }
+    }
+
+    public abstract class ViewModel<TParent> : ViewModel
+        where TParent : ViewModel
+    {
+        internal TParent Parent { get; }
+
+        protected ViewModel(TParent parent)
+        {
+            Parent = parent;   
+        }
+    }
+
+    public abstract class ViewModel<TParent, TCollection, TItem> : ViewModel<TParent>
+        where TParent : ViewModel
+        where TCollection : ViewModelCollection<TParent, TCollection, TItem>
+        where TItem : ViewModel<TParent, TCollection, TItem>
+    {
+        internal TCollection? ParentCollection { get; set; }
+
+        protected ViewModel(TParent parent) : base(parent)
+        {
         }
     }
 }

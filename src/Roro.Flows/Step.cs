@@ -8,46 +8,79 @@ using System.Threading.Tasks;
 
 namespace Roro.Flows
 {
-    public abstract class Step : ViewModel, IExecutable
+    public abstract class Step : ViewModel<Flow, StepCollection, Step>, IExecutable
     {
-        internal readonly StepCollection _parentStepCollection;
+        internal ParentStep? ParentStep => ParentCollection?.ParentStep;
 
-        protected Step(StepCollection parentStepCollection)
+        protected Step(Flow parent) : base(parent)
         {
-            _parentStepCollection = parentStepCollection;
         }
 
-        internal static Step Create(StepCollection parentStepCollection, JsonElement jsonElement)
+        protected Step(Flow parent, JsonElement jsonElement) : base(parent)
         {
-            var type = jsonElement.GetProperty(nameof(Type)).GetString();
+        }
+
+        internal static Step Create<TStep>(Flow parent) where TStep : Step
+        {
+            var type = typeof(TStep).Name;
             if (type == typeof(ActionStep).Name)
-                return new ActionStep(parentStepCollection, jsonElement);
+                return new ActionStep(parent);
             if (type == typeof(IfStep).Name)
-                return new IfStep(parentStepCollection, jsonElement);
+                return new IfStep(parent);
             if (type == typeof(ElseIfStep).Name)
-                return new ElseIfStep(parentStepCollection, jsonElement);
+                return new ElseIfStep(parent);
             if (type == typeof(ElseStep).Name)
-                return new ElseStep(parentStepCollection, jsonElement);
+                return new ElseStep(parent);
             if (type == typeof(ForStep).Name)
-                return new ForStep(parentStepCollection, jsonElement);
+                return new ForStep(parent);
             if (type == typeof(WhileStep).Name)
-                return new WhileStep(parentStepCollection, jsonElement);
+                return new WhileStep(parent);
             if (type == typeof(BreakStep).Name)
-                return new BreakStep(parentStepCollection, jsonElement);
+                return new BreakStep(parent);
             if (type == typeof(ContinueStep).Name)
-                return new ContinueStep(parentStepCollection, jsonElement);
+                return new ContinueStep(parent);
             if (type == typeof(TryStep).Name)
-                return new TryStep(parentStepCollection, jsonElement);
+                return new TryStep(parent);
             if (type == typeof(CatchStep).Name)
-                return new CatchStep(parentStepCollection, jsonElement);
+                return new CatchStep(parent);
             if (type == typeof(ThrowStep).Name)
-                return new ThrowStep(parentStepCollection, jsonElement);
+                return new ThrowStep(parent);
             if (type == typeof(CallStep).Name)
-                return new CallStep(parentStepCollection, jsonElement);
+                return new CallStep(parent);
             throw new NotSupportedException();
         }
 
-        public override void ToJson(Utf8JsonWriter writer)
+        internal static Step Create(Flow parent, JsonElement jsonElement)
+        {
+            var type = jsonElement.GetProperty(nameof(Type)).GetString();
+            if (type == typeof(ActionStep).Name)
+                return new ActionStep(parent, jsonElement);
+            if (type == typeof(IfStep).Name)
+                return new IfStep(parent, jsonElement);
+            if (type == typeof(ElseIfStep).Name)
+                return new ElseIfStep(parent, jsonElement);
+            if (type == typeof(ElseStep).Name)
+                return new ElseStep(parent, jsonElement);
+            if (type == typeof(ForStep).Name)
+                return new ForStep(parent, jsonElement);
+            if (type == typeof(WhileStep).Name)
+                return new WhileStep(parent, jsonElement);
+            if (type == typeof(BreakStep).Name)
+                return new BreakStep(parent, jsonElement);
+            if (type == typeof(ContinueStep).Name)
+                return new ContinueStep(parent, jsonElement);
+            if (type == typeof(TryStep).Name)
+                return new TryStep(parent, jsonElement);
+            if (type == typeof(CatchStep).Name)
+                return new CatchStep(parent, jsonElement);
+            if (type == typeof(ThrowStep).Name)
+                return new ThrowStep(parent, jsonElement);
+            if (type == typeof(CallStep).Name)
+                return new CallStep(parent, jsonElement);
+            throw new NotSupportedException();
+        }
+
+        internal override void ToJson(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
             writer.WriteString(nameof(Type), Type);
@@ -56,26 +89,24 @@ namespace Roro.Flows
 
         public string Type => GetType().Name;
 
-        public string Number => _parentStepCollection._parentStep is null ?
-                                                        string.Empty + _parentStepCollection.IndexOf(this) :
-                                _parentStepCollection._parentStep.Number + _parentStepCollection.IndexOf(this);
+        public string Number => ParentStep?.Number + "/" + ParentCollection!.IndexOf(this);
 
-        protected Step? GetNextStep()
+        protected Step? NextOrDefault()
         {
-            return GetNextStep(x => true);
+            return NextOrDefault(x => true);
         }
 
-        protected Step? GetNextStep(Func<Step?, bool> predicate)
+        protected Step? NextOrDefault(Func<Step?, bool> predicate)
         {
-            var index = _parentStepCollection.IndexOf(this);
+            var index = ParentCollection!.IndexOf(this);
             if (index == -1) throw new Exception();
-            var nextStep = _parentStepCollection.ElementAtOrDefault(++index);
+            var nextStep = ParentCollection.ElementAtOrDefault(++index);
             while (nextStep != null && !predicate.Invoke(nextStep))
-                nextStep = _parentStepCollection.ElementAtOrDefault(++index);
+                nextStep = ParentCollection.ElementAtOrDefault(++index);
             return nextStep;
         }
 
-        Task<ExecutionResult> IExecutable.ExecuteAsync(ExecutionContext context) => ExecuteAsync(context);
+        async Task<ExecutionResult> IExecutable.ExecuteAsync(ExecutionContext context) => await ExecuteAsync(context);
 
         protected abstract Task<ExecutionResult> ExecuteAsync(ExecutionContext context);
 
@@ -92,7 +123,7 @@ namespace Roro.Flows
                 }
                 if (call.Executable is TryStep tryStep)
                 {
-                    if (tryStep.GetNextStep() is Step nextStep)
+                    if (tryStep.NextOrDefault() is Step nextStep)
                     {
                         context.PushCall(new CallStackFrame(nextStep));
                     }

@@ -6,11 +6,11 @@ namespace Roro.Flows.Steps
 {
     public sealed class ElseStep : ParentStep
     {
-        internal ElseStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        internal ElseStep(Flow parent) : base(parent)
         {
         }
 
-        internal ElseStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection, jsonElement)
+        internal ElseStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Roro.Flows.Steps
                 else
                 {
                     context.PopCall();
-                    if (GetNextStep() is Step nextStep)
+                    if (NextOrDefault() is Step nextStep)
                     {
                         context.PushCall(new CallStackFrame(nextStep));
                     }
@@ -35,7 +35,7 @@ namespace Roro.Flows.Steps
             else
             {
                 context.PopCall();
-                if (GetNextStep() is Step nextStep)
+                if (NextOrDefault() is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

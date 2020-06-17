@@ -7,12 +7,12 @@ namespace Roro.Flows.Steps
 {
     public sealed class ActionStep : Step
     {
-        internal ActionStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        internal ActionStep(Flow parent) : base(parent)
         {
         }
 
-        internal ActionStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection)
-        { 
+        internal ActionStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
+        {
         }
 
         protected override async Task<ExecutionResult> ExecuteAsync(ExecutionContext context)
@@ -22,7 +22,7 @@ namespace Roro.Flows.Steps
             {
                 await Task.CompletedTask; // execute action here
                 context.PopCall();
-                if (GetNextStep() is Step nextStep)
+                if (NextOrDefault() is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

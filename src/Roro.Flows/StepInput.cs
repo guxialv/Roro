@@ -1,19 +1,21 @@
 ﻿using Roro.Flows.Framework;
+using System.Text.Json;
 
 namespace Roro.Flows
 {
-    public sealed class StepInput : NameTypeValue
+    public sealed class StepInput : NameTypeValue<Step, StepInputCollection, StepInput>
     {
-        internal readonly StepInputCollection _parentStepInputCollection;
-
-        internal StepInput(StepInputCollection parentStepInputCollection)
+        internal StepInput(Step parent) : base(parent)
         {
-            _parentStepInputCollection = parentStepInputCollection;
         }
 
-        public override bool NameIsReadOnly => true;
+        internal StepInput(Step parent, JsonElement jsonElement) : base(parent, jsonElement)
+        {
+        }
 
-        public override bool TypeIsReadOnly => true;
+        public override bool NameIsReadOnly => false;
+
+        public override bool TypeIsReadOnly => false;
 
         public override bool ValueIsReadOnly => false;
     }

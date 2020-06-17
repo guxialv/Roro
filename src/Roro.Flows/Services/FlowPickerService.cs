@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Roro.Flows.Services
@@ -26,13 +27,15 @@ namespace Roro.Flows.Services
 
         public async Task<string> GetFileContentsAsync(string filePath)
         {
-            await Task.CompletedTask;
+            if (!await FileExistsAsync(filePath))
+                throw new FileNotFoundException();
             return _files[filePath];
         }
 
         public async Task SetFileContentsAsync(string filePath, string contents)
         {
-            await Task.CompletedTask;
+            if (!await FileExistsAsync(filePath))
+                throw new FileNotFoundException();
             _files[filePath] = contents;
         }
     }

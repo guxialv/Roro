@@ -19,7 +19,7 @@ namespace Roro.Flows.Execution
             Globals = new Dictionary<string, object>();
         }
 
-        internal Flow? CurrentFlow => _calls.Peek()?.Executable is Flow flow ? flow : CurrentStep?._parentStepCollection._parentFlow;
+        internal Flow? CurrentFlow => _calls.Peek()?.Executable is Flow flow ? flow : CurrentStep!.ParentCollection!.Parent;
 
         internal Step? CurrentStep => _calls.Peek()?.Executable is Step step ? step : null;
 
@@ -61,27 +61,30 @@ namespace Roro.Flows.Execution
             await _app.Flows.SaveAllAsync();
 
             var path = _app.Flows.First().Path;
-            var json = await _app._services.GetShared<IFlowPickerService>()!.GetFileContentsAsync(path);
-            var flow = new Flow(_app.Flows, path, JsonDocument.Parse(json).RootElement);
+            var json = await _app.Services.GetShared<IFlowPickerService>()!.GetFileContentsAsync(path);
+            var flow = new Flow(_app, path, JsonDocument.Parse(json).RootElement);
 
             _calls.Clear();
-            _calls.Push(new CallStackFrame(flow));
             Console.WriteLine($"INFO: Execution started.");
-            while (_calls.TryPeek(out CallStackFrame call))
+            PushCall(new CallStackFrame(flow));
+            while (PeekCall() is CallStackFrame call)
             {
                 try
                 {
-                    Console.WriteLine($"INFO: Executing {call.Executable.GetType().Name}..");
+                    var currentFlow = CurrentFlow;
+                    var currentStep = CurrentStep;
+                    Console.WriteLine($"INFO: Executing {currentFlow!.Path}{currentStep?.Number} ({call.Executable.GetType().Name})");
                     var context = new ExecutionContext(this, call);
                     var result = await call.Executable.ExecuteAsync(context);
                     call.IsFirstEntry = false;
+                    Console.WriteLine($"INFO: Executing {currentFlow!.Path}{currentStep?.Number} ({call.Executable.GetType().Name}) -> {result}");
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine($"FAIL: {exception.Message}");
                     Console.WriteLine($"FAIL: Execution failed.");
-
                     while (PopCall() != null) ;
+                    return;
                 }
             }
             Console.WriteLine($"INFO: Execution completed.");

@@ -7,25 +7,37 @@ using System.Threading.Tasks;
 
 namespace Roro.Flows
 {
-    public sealed class Flow : ViewModel, IExecutable
+    public sealed class Flow : ViewModel<FlowApp, FlowCollection, Flow>, IExecutable
     {
-        internal readonly FlowCollection _parentFlowCollection;
+        public string Id => Path;
 
-        internal Flow(FlowCollection parentFlowCollection, string path)
+        internal Flow(FlowApp parent, string path) : base(parent)
         {
-            _parentFlowCollection = parentFlowCollection;
             Path = path;
+            Inputs = new FlowInputCollection(this);
+            Outputs = new FlowOutputCollection(this);
+            Variables = new FlowVariableCollection(this);
             Steps = new StepCollection(this);
         }
 
-        internal Flow(FlowCollection parentFlowCollection, string path, JsonElement jsonElement) : this(parentFlowCollection, path)
+        internal Flow(FlowApp parent, string path, JsonElement jsonElement) : base(parent)
         {
+            Path = path;
+            Inputs = new FlowInputCollection(this, jsonElement.GetProperty(nameof(Inputs)));
+            Outputs = new FlowOutputCollection(this, jsonElement.GetProperty(nameof(Outputs)));
+            Variables = new FlowVariableCollection(this, jsonElement.GetProperty(nameof(Variables)));
             Steps = new StepCollection(this, jsonElement.GetProperty(nameof(Steps)));
         }
 
-        public override void ToJson(Utf8JsonWriter writer)
+        internal override void ToJson(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
+            writer.WritePropertyName(nameof(Inputs));
+            Inputs.ToJson(writer);
+            writer.WritePropertyName(nameof(Outputs));
+            Outputs.ToJson(writer);
+            writer.WritePropertyName(nameof(Variables));
+            Variables.ToJson(writer);
             writer.WritePropertyName(nameof(Steps));
             Steps.ToJson(writer);
             writer.WriteEndObject();
@@ -47,9 +59,9 @@ namespace Roro.Flows
             if (context.IsFirstEntry)
             {
                 context.Inputs.Clear(); // set inputs
-                if (Steps.FirstOrDefault() is Step step)
+                if (Steps.FirstOrDefault() is Step firstStep)
                 {
-                    context.PushCall(new CallStackFrame(step));
+                    context.PushCall(new CallStackFrame(firstStep));
                     return ExecutionResult.Running;
                 }
                 else

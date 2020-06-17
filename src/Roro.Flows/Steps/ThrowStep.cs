@@ -7,11 +7,11 @@ namespace Roro.Flows.Steps
 {
     public sealed class ThrowStep : Step
     {
-        internal ThrowStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        internal ThrowStep(Flow parent) : base(parent)
         {
         }
 
-        internal ThrowStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection)
+        internal ThrowStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
         {
         }
 

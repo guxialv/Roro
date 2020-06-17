@@ -7,11 +7,11 @@ namespace Roro.Flows.Steps
 {
     public sealed class ContinueStep : Step
     {
-        internal ContinueStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        internal ContinueStep(Flow parent) : base(parent)
         {
         }
 
-        internal ContinueStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection)
+        internal ContinueStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
         {
         }
 

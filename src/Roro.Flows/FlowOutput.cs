@@ -1,12 +1,21 @@
 ﻿using Roro.Flows.Framework;
+using System.Text.Json;
 
 namespace Roro.Flows
 {
-    public sealed class FlowOutput : NameTypeValue
+    public sealed class FlowOutput : NameTypeValue<Flow, FlowOutputCollection, FlowOutput>
     {
-        public override bool NameIsReadOnly => true;
+        internal FlowOutput(Flow parent) : base(parent)
+        {
+        }
 
-        public override bool TypeIsReadOnly => true;
+        internal FlowOutput(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
+        {
+        }
+
+        public override bool NameIsReadOnly => false;
+
+        public override bool TypeIsReadOnly => false;
 
         public override bool ValueIsReadOnly => false;
     }

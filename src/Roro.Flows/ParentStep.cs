@@ -5,22 +5,28 @@ namespace Roro.Flows
 {
     public abstract class ParentStep : Step
     {
-        protected ParentStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        protected ParentStep(Flow parent) : base(parent)
         {
             Inputs = new StepInputCollection(this);
             Outputs = new StepOutputCollection(this);
             Steps = new StepCollection(this);
         }
 
-        protected ParentStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection)
+        protected ParentStep(Flow parent, JsonElement jsonElement) : base(parent)
         {
+            Inputs = new StepInputCollection(this, jsonElement.GetProperty(nameof(Inputs)));
+            Outputs = new StepOutputCollection(this, jsonElement.GetProperty(nameof(Outputs)));
             Steps = new StepCollection(this, jsonElement.GetProperty(nameof(Steps)));
         }
 
-        public override void ToJson(Utf8JsonWriter writer)
+        internal override void ToJson(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
             writer.WriteString(nameof(Type), Type);
+            writer.WritePropertyName(nameof(Inputs));
+            Inputs.ToJson(writer);
+            writer.WritePropertyName(nameof(Outputs));
+            Outputs.ToJson(writer);
             writer.WritePropertyName(nameof(Steps));
             Steps.ToJson(writer);
             writer.WriteEndObject();

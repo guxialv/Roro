@@ -1,22 +1,26 @@
 ﻿using Roro.Flows.Framework;
 using Roro.Flows.Services;
+using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Roro.Flows
 {
-    public sealed class FlowCollection : ViewModelCollection<Flow>
+    public sealed class FlowCollection : ViewModelCollection<FlowApp, FlowCollection, Flow>
     {
-        internal readonly FlowApp _app;
-
-        internal FlowCollection(FlowApp app)
+        internal FlowCollection(FlowApp parent) : base(parent)
         {
-            _app = app;
+        }
+
+        protected override Flow CreateItem(JsonElement jsonElement)
+        {
+            throw new NotSupportedException();
         }
 
         public async Task<Flow> AddNewAsync()
         {
-            var flow = new Flow(this, $"/flow-{Count}");
-            await _app._services.GetShared<IFlowPickerService>()!.AddFileAsync(flow.Path, flow.ToJson());
+            var flow = new Flow(Parent, $"/flow-{Count}");
+            await Parent.Services.GetShared<IFlowPickerService>()!.AddFileAsync(flow.Path, flow.ToJson());
             Add(flow);
             return flow;
         }
@@ -25,7 +29,7 @@ namespace Roro.Flows
         {
             foreach (var flow in Items)
             {
-                await _app._services.GetShared<IFlowPickerService>()!.SetFileContentsAsync(flow.Path, flow.ToJson());
+                await Parent.Services.GetShared<IFlowPickerService>()!.SetFileContentsAsync(flow.Path, flow.ToJson());
             }
         }
     }

@@ -1,12 +1,25 @@
-﻿namespace Roro.Flows.Framework
+﻿using System.Text.Json;
+
+namespace Roro.Flows.Framework
 {
-    public abstract class NameTypeValue : ViewModel
+    public abstract class NameTypeValue<TParent, TCollection, TItem>
+        : ViewModel<TParent, TCollection, TItem>
+        where TParent : ViewModel
+        where TCollection : NameTypeValueCollection<TParent, TCollection, TItem>
+        where TItem : NameTypeValue<TParent, TCollection, TItem>
     {
-        protected NameTypeValue()
+        protected NameTypeValue(TParent parent) : base(parent)
         {
             Name = string.Empty;
             Type = typeof(string).Name;
             Value = string.Empty;
+        }
+
+        protected NameTypeValue(TParent parent, JsonElement jsonElement) : base(parent)
+        {
+            Name = jsonElement.GetProperty(nameof(Name)).GetString();
+            Type = jsonElement.GetProperty(nameof(Type)).GetString();
+            Value = jsonElement.GetProperty(nameof(Value)).GetString();
         }
 
         public virtual string Name { get; set; }

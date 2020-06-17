@@ -7,11 +7,11 @@ namespace Roro.Flows.Steps
 {
     public sealed class WhileStep : ParentStep
     {
-        internal WhileStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        internal WhileStep(Flow parent) : base(parent)
         {
         }
 
-        internal WhileStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection, jsonElement)
+        internal WhileStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Roro.Flows.Steps
                     else
                     {
                         context.PopCall();
-                        if (GetNextStep() is Step nextStep)
+                        if (NextOrDefault() is Step nextStep)
                         {
                             context.PushCall(new CallStackFrame(nextStep));
                         }
@@ -55,7 +55,7 @@ namespace Roro.Flows.Steps
                 else
                 {
                     context.PopCall();
-                    if (GetNextStep() is Step nextStep)
+                    if (NextOrDefault() is Step nextStep)
                     {
                         context.PushCall(new CallStackFrame(nextStep));
                     }
@@ -65,7 +65,7 @@ namespace Roro.Flows.Steps
             else
             {
                 context.PopCall();
-                if (GetNextStep() is Step nextStep)
+                if (NextOrDefault() is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

@@ -1,21 +1,21 @@
 ﻿using Roro.Flows.Framework;
-using System.Linq;
 using System.Text.Json;
 
 namespace Roro.Flows
 {
-    public sealed class StepInputCollection : NameTypeValueCollection<StepInput>
+    public sealed class StepInputCollection : NameTypeValueCollection<Step, StepInputCollection, StepInput>
     {
-        internal readonly Step _parentStep;
-
-        internal StepInputCollection(Step parentStep)
+        internal StepInputCollection(Step parent) : base(parent)
         {
-            _parentStep = parentStep;
         }
 
-        internal StepInputCollection(Step parentStep, JsonElement jsonElement) : this(parentStep)
+        internal StepInputCollection(Step parent, JsonElement jsonElement) : base(parent, jsonElement)
         {
-            jsonElement.EnumerateArray().ToList().ForEach(step => Add(Step.Create(this, step)));
+        }
+
+        protected override StepInput CreateItem(JsonElement jsonElement)
+        {
+            return new StepInput(Parent, jsonElement);
         }
     }
 }

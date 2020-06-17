@@ -6,11 +6,11 @@ namespace Roro.Flows.Steps
 {
     public sealed class TryStep : ParentStep
     {
-        internal TryStep(StepCollection parentStepCollection) : base(parentStepCollection)
+        internal TryStep(Flow parent) : base(parent)
         {
         }
 
-        internal TryStep(StepCollection parentStepCollection, JsonElement jsonElement) : base(parentStepCollection, jsonElement)
+        internal TryStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Roro.Flows.Steps
             else
             {
                 context.PopCall();
-                if (GetNextStep(step => !(step is CatchStep)) is Step nextStep)
+                if (NextOrDefault(step => !(step is CatchStep)) is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }
