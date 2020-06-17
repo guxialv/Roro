@@ -64,7 +64,7 @@ namespace Roro.Flows.Steps
             {
                 context.Outputs.Clear(); // get outputs
                 context.PopCall();
-                if (NextOrDefault() is Step nextStep)
+                if (ParentCollection!.NextOrDefault(this) is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

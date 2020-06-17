@@ -24,7 +24,7 @@ namespace Roro.Flows.Steps
                 var call = context.PeekCall();
                 if (call is null || call.Executable is Flow)
                 {
-                    throw new Exception("Cannot find a loop to continue");
+                    throw new Exception("The continue step cannot find any loop step");
                 }
                 if (call.Executable is ForStep || call.Executable is WhileStep)
                 {

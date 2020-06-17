@@ -1,4 +1,6 @@
 ﻿using Roro.Flows.Framework;
+using System;
+using System.Linq;
 using System.Text.Json;
 
 namespace Roro.Flows
@@ -40,6 +42,22 @@ namespace Roro.Flows
             var step = Step.Create<TStep>(Parent);
             Add(step);
             return (TStep)step;
+        }
+
+        public Step? NextOrDefault(Step step)
+        {
+            return NextOrDefault(step, x => true);
+        }
+
+        public Step? NextOrDefault(Step step, Func<Step, bool> predicate)
+        {
+            var index = IndexOf(step);
+            if (index == -1)
+                throw new IndexOutOfRangeException();
+            var nextStep = Items.ElementAtOrDefault(++index);
+            while (nextStep != null && !predicate.Invoke(nextStep))
+                nextStep = Items.ElementAtOrDefault(++index);
+            return nextStep;
         }
     }
 }

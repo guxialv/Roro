@@ -45,7 +45,7 @@ namespace Roro.Flows.Steps
                     else
                     {
                         context.PopCall();
-                        if (NextOrDefault() is Step nextStep)
+                        if (ParentCollection!.NextOrDefault(this) is Step nextStep)
                         {
                             context.PushCall(new CallStackFrame(nextStep));
                         }
@@ -55,7 +55,7 @@ namespace Roro.Flows.Steps
                 else
                 {
                     context.PopCall();
-                    if (NextOrDefault() is Step nextStep)
+                    if (ParentCollection!.NextOrDefault(this) is Step nextStep)
                     {
                         context.PushCall(new CallStackFrame(nextStep));
                     }
@@ -65,7 +65,7 @@ namespace Roro.Flows.Steps
             else
             {
                 context.PopCall();
-                if (NextOrDefault() is Step nextStep)
+                if (ParentCollection!.NextOrDefault(this) is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

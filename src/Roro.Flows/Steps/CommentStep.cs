@@ -18,7 +18,7 @@ namespace Roro.Flows.Steps
         {
             await Task.CompletedTask;
             context.PopCall();
-            if (NextOrDefault() is Step nextStep)
+            if (ParentCollection!.NextOrDefault(this) is Step nextStep)
             {
                 context.PushCall(new CallStackFrame(nextStep));
             }

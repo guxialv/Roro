@@ -95,21 +95,6 @@ namespace Roro.Flows
 
         public string Number => ParentStep?.Number + "/" + ParentCollection!.IndexOf(this);
 
-        protected Step? NextOrDefault()
-        {
-            return NextOrDefault(x => true);
-        }
-
-        protected Step? NextOrDefault(Func<Step?, bool> predicate)
-        {
-            var index = ParentCollection!.IndexOf(this);
-            if (index == -1) throw new Exception();
-            var nextStep = ParentCollection.ElementAtOrDefault(++index);
-            while (nextStep != null && !predicate.Invoke(nextStep))
-                nextStep = ParentCollection.ElementAtOrDefault(++index);
-            return nextStep;
-        }
-
         async Task<ExecutionResult> IExecutable.ExecuteAsync(ExecutionContext context) => await ExecuteAsync(context);
 
         protected abstract Task<ExecutionResult> ExecuteAsync(ExecutionContext context);
@@ -127,7 +112,7 @@ namespace Roro.Flows
                 }
                 if (call.Executable is TryStep tryStep)
                 {
-                    if (tryStep.NextOrDefault() is Step nextStep)
+                    if (tryStep.ParentCollection!.NextOrDefault(tryStep) is Step nextStep)
                     {
                         context.PushCall(new CallStackFrame(nextStep));
                     }

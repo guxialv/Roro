@@ -31,7 +31,7 @@ namespace Roro.Flows.Steps
             else
             {
                 context.PopCall();
-                if (NextOrDefault(step => !(step is CatchStep)) is Step nextStep)
+                if (ParentCollection!.NextOrDefault(this, step => !(step is CatchStep)) is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

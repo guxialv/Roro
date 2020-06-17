@@ -22,7 +22,7 @@ namespace Roro.Flows.Steps
             {
                 await Task.CompletedTask; // execute action here
                 context.PopCall();
-                if (NextOrDefault() is Step nextStep)
+                if (ParentCollection!.NextOrDefault(this) is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

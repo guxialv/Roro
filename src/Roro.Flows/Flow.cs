@@ -66,7 +66,7 @@ namespace Roro.Flows
                 }
                 else
                 {
-                    throw new Exception("Cannot execute the flow without steps");
+                    throw new Exception("The flow cannot be executed without steps");
                 }
             }
             else
