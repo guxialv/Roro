@@ -47,6 +47,8 @@ namespace Roro.Flows
                 return new ThrowStep(parent);
             if (type == typeof(CallStep).Name)
                 return new CallStep(parent);
+            if (type == typeof(CommentStep).Name)
+                return new CommentStep(parent);
             throw new NotSupportedException();
         }
 
@@ -77,6 +79,8 @@ namespace Roro.Flows
                 return new ThrowStep(parent, jsonElement);
             if (type == typeof(CallStep).Name)
                 return new CallStep(parent, jsonElement);
+            if (type == typeof(CommentStep).Name)
+                return new CommentStep(parent, jsonElement);
             throw new NotSupportedException();
         }
 

@@ -16,11 +16,11 @@ namespace Roro.Tester
 
             flow1.Steps.AddNew<ActionStep>();
             flow1.Steps.AddNew<CallStep>().FlowPath = flow2.Path;
+            flow1.Steps.AddNew<CommentStep>();
             flow1.Steps.AddNew<ActionStep>();
 
             flow2.Steps.AddNew<ActionStep>();
             flow2.Steps.AddNew<IfStep>().Steps.AddNew<ActionStep>();
-            flow2.Steps.AddNew<ElseIfStep>().Steps.AddNew<ActionStep>();
             flow2.Steps.AddNew<ElseIfStep>().Steps.AddNew<ActionStep>();
             flow2.Steps.AddNew<ElseStep>().Steps.AddNew<ActionStep>();
             flow2.Steps.AddNew<ActionStep>();
