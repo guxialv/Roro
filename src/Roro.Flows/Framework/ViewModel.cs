@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 
@@ -43,7 +44,22 @@ namespace Roro.Flows.Framework
         where TCollection : ViewModelCollection<TParent, TCollection, TItem>
         where TItem : ViewModel<TParent, TCollection, TItem>
     {
-        internal TCollection? ParentCollection { get; set; }
+        private TCollection? _parentCollection;
+
+        internal TCollection? ParentCollection
+        {
+            get => _parentCollection;
+            set
+            {
+                if (value == _parentCollection)
+                    return;
+                if (value is null && _parentCollection!.Contains((TItem)this))
+                    throw new InvalidOperationException("The item is not removed in the collection");
+                if (value != null && !value.Contains((TItem)this))
+                    throw new InvalidOperationException("The item is not added in the collection");
+                _parentCollection = value;
+            }
+        }
 
         protected ViewModel(TParent parent) : base(parent)
         {

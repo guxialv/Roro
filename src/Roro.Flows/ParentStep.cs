@@ -9,14 +9,14 @@ namespace Roro.Flows
         {
             Inputs = new StepInputCollection(this);
             Outputs = new StepOutputCollection(this);
-            Steps = new StepCollection(this);
+            Steps = new StepCollection(Parent, this);
         }
 
         protected ParentStep(Flow parent, JsonElement jsonElement) : base(parent)
         {
             Inputs = new StepInputCollection(this, jsonElement.GetProperty(nameof(Inputs)));
             Outputs = new StepOutputCollection(this, jsonElement.GetProperty(nameof(Outputs)));
-            Steps = new StepCollection(this, jsonElement.GetProperty(nameof(Steps)));
+            Steps = new StepCollection(Parent, this, jsonElement.GetProperty(nameof(Steps)));
         }
 
         internal override void ToJson(Utf8JsonWriter writer)

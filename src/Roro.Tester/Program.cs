@@ -16,7 +16,7 @@ namespace Roro.Tester
 
             flow1.Steps.AddNew<ActionStep>();
             flow1.Steps.AddNew<CallStep>().FlowPath = flow2.Path;
-            flow1.Steps.AddNew<CommentStep>();
+            flow1.Steps.AddNew<ContinueStep>();
             flow1.Steps.AddNew<ActionStep>();
 
             flow2.Steps.AddNew<ActionStep>();
@@ -28,23 +28,6 @@ namespace Roro.Tester
             Console.WriteLine($"Count: {app.Flows.Count}");
             await app.RunAsync();
             Console.WriteLine($"Count: {app.Flows.Count}");
-            //PrintTree(flow2.Steps);
-        }
-
-        static void PrintTree(StepCollection steps)
-        {
-            foreach (var step in steps)
-            {
-                if (step is ParentStep parentStep)
-                {
-                    Console.WriteLine($"{step.Number}\t({step.Type})\t({parentStep.Steps.Count})");
-                    PrintTree(parentStep.Steps);
-                }
-                else
-                {
-                    Console.WriteLine($"{step.Number}\t({step.Type})");
-                }
-            }
         }
     }
 }

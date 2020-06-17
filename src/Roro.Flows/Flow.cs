@@ -17,7 +17,7 @@ namespace Roro.Flows
             Inputs = new FlowInputCollection(this);
             Outputs = new FlowOutputCollection(this);
             Variables = new FlowVariableCollection(this);
-            Steps = new StepCollection(this);
+            Steps = new StepCollection(this, null);
         }
 
         internal Flow(FlowApp parent, string path, JsonElement jsonElement) : base(parent)
@@ -26,7 +26,7 @@ namespace Roro.Flows
             Inputs = new FlowInputCollection(this, jsonElement.GetProperty(nameof(Inputs)));
             Outputs = new FlowOutputCollection(this, jsonElement.GetProperty(nameof(Outputs)));
             Variables = new FlowVariableCollection(this, jsonElement.GetProperty(nameof(Variables)));
-            Steps = new StepCollection(this, jsonElement.GetProperty(nameof(Steps)));
+            Steps = new StepCollection(this, null, jsonElement.GetProperty(nameof(Steps)));
         }
 
         internal override void ToJson(Utf8JsonWriter writer)

@@ -50,8 +50,8 @@ namespace Roro.Flows.Framework
             jsonElement.EnumerateArray().ToList().ForEach(jsonItem =>
             {
                 var item = CreateItem(jsonItem);
-                item.ParentCollection = (TCollection)this;
                 Items.Add(item);
+                item.ParentCollection = (TCollection)this;
             });
         }
 
@@ -59,37 +59,38 @@ namespace Roro.Flows.Framework
 
         protected override void ClearItems()
         {
-            Items.ToList().ForEach(item => item.ParentCollection = null);
+            var items = Items.ToList();
             base.ClearItems();
+            items.ForEach(item => item.ParentCollection = null);
         }
 
         protected override void InsertItem(int index, TItem item)
         {
             if (item.Parent != Parent)
-                throw new ArgumentException("The item has a different parent");
+                throw new ArgumentException("The item is in another parent");
             if (item.ParentCollection != null)
-                throw new ArgumentException("The item has an existing parent collection");
-            item.ParentCollection = (TCollection)this;
+                throw new ArgumentException("The item is in another collection");
             base.InsertItem(index, item);
+            item.ParentCollection = (TCollection)this;
         }
 
         protected override void RemoveItem(int index)
         {
             var item = Items[index];
-            item.ParentCollection = null;
             base.RemoveItem(index);
+            item.ParentCollection = null;
         }
 
         protected override void SetItem(int index, TItem item)
         {
             if (item.Parent != Parent)
-                throw new ArgumentException("The item has a different parent");
+                throw new ArgumentException("The item is in another parent");
             if (item.ParentCollection != null)
-                throw new ArgumentException("The item has an existing parent collection");
+                throw new ArgumentException("The item is in another collection");
             var oldItem = Items[index];
+            base.SetItem(index, item);
             oldItem.ParentCollection = null;
             item.ParentCollection = (TCollection)this;
-            base.SetItem(index, item);
         }
     }
 }
