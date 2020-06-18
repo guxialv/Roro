@@ -1,5 +1,6 @@
 ﻿using Roro.Flows.Execution;
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace Roro.Flows.Steps
                 context.Outputs.Clear(); // set outputs
                 if (evaluateResult is true)
                 {
-                    if (GetFirstStep() is Step firstStep)
+                    if (ParentCollection!.FirstOrDefault() is Step firstStep)
                     {
                         context.PushCall(new CallStackFrame(firstStep));
                     }

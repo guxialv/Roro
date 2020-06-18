@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Roro.Flows
 {
@@ -37,10 +36,5 @@ namespace Roro.Flows
         public StepOutputCollection Outputs { get; }
 
         public StepCollection Steps { get; }
-
-        protected Step? GetFirstStep()
-        {
-            return Steps.FirstOrDefault();
-        }
     }
 }

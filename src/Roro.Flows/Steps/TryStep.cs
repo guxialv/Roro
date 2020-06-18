@@ -1,4 +1,5 @@
 ﻿using Roro.Flows.Execution;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace Roro.Flows.Steps
             await Task.CompletedTask;
             if (context.IsFirstEntry)
             {
-                if (GetFirstStep() is Step nextStep)
+                if (ParentCollection!.FirstOrDefault() is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }
