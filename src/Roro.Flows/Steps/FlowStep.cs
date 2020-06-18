@@ -6,38 +6,18 @@ using System.Threading.Tasks;
 
 namespace Roro.Flows.Steps
 {
-    public sealed class CallStep : Step
+    public sealed class FlowStep : Step
     {
-        internal CallStep(Flow parent) : base(parent)
+        internal FlowStep(Flow parent) : base(parent)
         {
-            FlowPath = string.Empty;
+            SubType = string.Empty;
             Inputs = new StepInputCollection(this);
             Outputs = new StepOutputCollection(this);
         }
 
-        internal CallStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
+        internal FlowStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
         {
-            FlowPath = jsonElement.GetProperty(nameof(FlowPath)).GetString();
-            Inputs = new StepInputCollection(this, jsonElement.GetProperty(nameof(Inputs)));
-            Outputs = new StepOutputCollection(this, jsonElement.GetProperty(nameof(Outputs)));
         }
-
-        internal override void ToJson(Utf8JsonWriter writer)
-        {
-            writer.WriteStartObject();
-            writer.WriteString(nameof(Type), Type);
-            writer.WriteString(nameof(FlowPath), FlowPath);
-            writer.WritePropertyName(nameof(Inputs));
-            Inputs.ToJson(writer);
-            writer.WritePropertyName(nameof(Outputs));
-            Outputs.ToJson(writer);
-            writer.WriteEndObject();
-        }
-        public string FlowPath { get; set; }
-
-        public StepInputCollection Inputs { get; }
-
-        public StepOutputCollection Outputs { get; }
 
         protected override async Task<ExecutionResult> ExecuteAsync(ExecutionContext context)
         {
@@ -46,9 +26,9 @@ namespace Roro.Flows.Steps
                 Flow? flow;
                 try
                 {
-                    var path = FlowPath;
-                    var json = await Parent.Parent.Services.GetShared<IFlowPickerService>()!.GetFileContentsAsync(path);
-                    flow = new Flow(Parent.Parent, path, JsonDocument.Parse(json).RootElement);
+                    var flowPath = SubType!;
+                    var jsonText = await Parent.Parent.Services.GetShared<IFlowPickerService>()!.GetFileContentsAsync(flowPath);
+                    flow = new Flow(Parent.Parent, flowPath, JsonDocument.Parse(jsonText).RootElement);
                 }
                 catch (Exception exception)
                 {

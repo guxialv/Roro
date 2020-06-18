@@ -8,6 +8,7 @@ namespace Roro.Flows.Steps
     {
         internal CommentStep(Flow parent) : base(parent)
         {
+            Inputs = new StepInputCollection(this);
         }
 
         internal CommentStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)

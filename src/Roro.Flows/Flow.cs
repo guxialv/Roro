@@ -1,6 +1,7 @@
 ﻿using Roro.Flows.Execution;
 using Roro.Flows.Framework;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -9,8 +10,6 @@ namespace Roro.Flows
 {
     public sealed class Flow : ViewModel<FlowApp, FlowCollection, Flow>, IExecutable
     {
-        public string Id => Path;
-
         internal Flow(FlowApp parent, string path) : base(parent)
         {
             Path = path;
@@ -43,8 +42,6 @@ namespace Roro.Flows
             writer.WriteEndObject();
         }
 
-        public string Path { get; }
-
         public FlowInputCollection Inputs { get; }
 
         public FlowOutputCollection Outputs { get; }
@@ -52,6 +49,18 @@ namespace Roro.Flows
         public FlowVariableCollection Variables { get; }
 
         public StepCollection Steps { get; }
+
+        #region IExecutable
+
+        public string Path { get; set; }
+
+        string IExecutable.Type => GetType().Name;
+
+        string? IExecutable.SubType => null;
+
+        IEnumerable? IExecutable.Inputs => Inputs;
+
+        IEnumerable? IExecutable.Outputs => Outputs;
 
         async Task<ExecutionResult> IExecutable.ExecuteAsync(ExecutionContext context)
         {
@@ -76,5 +85,7 @@ namespace Roro.Flows
                 return ExecutionResult.Completed;
             }
         }
+
+        #endregion
     }
 }

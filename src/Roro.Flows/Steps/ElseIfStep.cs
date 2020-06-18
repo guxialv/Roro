@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace Roro.Flows.Steps
 {
-    public sealed class ElseIfStep : ParentStep
+    public sealed class ElseIfStep : Step
     {
         internal ElseIfStep(Flow parent) : base(parent)
         {
+            SubType = string.Empty;
+            Inputs = new StepInputCollection(this);
+            Outputs = new StepOutputCollection(this);
+            Steps = new StepCollection(Parent, this);
         }
 
         internal ElseIfStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
@@ -39,7 +43,7 @@ namespace Roro.Flows.Steps
                 context.Outputs.Clear(); // set outputs
                 if (evaluateResult is true)
                 {
-                    if (ParentCollection!.FirstOrDefault() is Step firstStep)
+                    if (Steps!.FirstOrDefault() is Step firstStep)
                     {
                         context.PushCall(new CallStackFrame(firstStep));
                     }

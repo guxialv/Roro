@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace Roro.Flows.Steps
 {
-    public sealed class CatchStep : ParentStep
+    public sealed class CatchStep : Step
     {
         internal CatchStep(Flow parent) : base(parent)
         {
+            Steps = new StepCollection(parent, this);
         }
 
         internal CatchStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
@@ -20,7 +21,7 @@ namespace Roro.Flows.Steps
             await Task.CompletedTask;
             if (context.IsFirstEntry)
             {
-                if (ParentCollection!.FirstOrDefault() is Step nextStep)
+                if (Steps!.FirstOrDefault() is Step nextStep)
                 {
                     context.PushCall(new CallStackFrame(nextStep));
                 }

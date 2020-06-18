@@ -19,7 +19,7 @@ namespace Roro.Flows
 
         public async Task<Flow> AddNewAsync()
         {
-            var flow = new Flow(Parent, $"/flow-{Count}");
+            var flow = new Flow(Parent, $"/flow-{Count + 1}");
             await Parent.Services.GetShared<IFlowPickerService>()!.AddFileAsync(flow.Path, flow.ToJson());
             Add(flow);
             return flow;

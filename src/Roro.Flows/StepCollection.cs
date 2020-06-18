@@ -9,14 +9,14 @@ namespace Roro.Flows
 {
     public sealed class StepCollection : ViewModelCollection<Flow, StepCollection, Step>
     {
-        internal ParentStep? ParentStep { get; }
+        internal Step? ParentStep { get; }
 
-        internal StepCollection(Flow parent, ParentStep? parentStep) : base(parent)
+        internal StepCollection(Flow parent, Step? parentStep) : base(parent)
         {
             ParentStep = parentStep;
         }
 
-        internal StepCollection(Flow parent, ParentStep? parentStep, JsonElement jsonElement) : base(parent, jsonElement)
+        internal StepCollection(Flow parent, Step? parentStep, JsonElement jsonElement) : base(parent, jsonElement)
         {
             ParentStep = parentStep;
         }
@@ -159,12 +159,12 @@ namespace Roro.Flows
             base.InsertItem(Count, newLastStep);
         }
 
-        public ParentStep? ParentOrDefault(Step step)
+        public Step? ParentOrDefault(Step step)
         {
             return ParentOrDefault(step, x => true);
         }
 
-        public ParentStep? ParentOrDefault(Step step, Func<Step, bool> predicate)
+        public Step? ParentOrDefault(Step step, Func<Step, bool> predicate)
         {
             if (step.ParentCollection != this)
                 throw new ArgumentException($"The {step} step is not in the collection");

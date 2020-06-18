@@ -69,18 +69,19 @@ namespace Roro.Flows.Execution
             PushCall(new CallStackFrame(flow));
             while (PeekCall() is CallStackFrame call)
             {
+                var result = ExecutionResult.NotRun;
                 try
                 {
                     var currentFlow = CurrentFlow;
                     var currentStep = CurrentStep;
-                    Console.WriteLine($"INFO: Executing {currentFlow!.Path}{currentStep?.Number} ({call.Executable.GetType().Name})");
                     var context = new ExecutionContext(this, call);
-                    var result = await call.Executable.ExecuteAsync(context);
+                    result = await call.Executable.ExecuteAsync(context);
                     call.IsFirstEntry = false;
-                    Console.WriteLine($"INFO: Executing {currentFlow!.Path}{currentStep?.Number} ({call.Executable.GetType().Name}) -> {result}");
+                    Console.WriteLine($"INFO: Executing {call.Executable.Path} ({call.Executable.GetType().Name}) -> {result}");
                 }
                 catch (Exception exception)
                 {
+                    Console.WriteLine($"INFO: Executing {call.Executable.Path} ({call.Executable.GetType().Name}) -> {result}");
                     Console.WriteLine($"FAIL: {exception.Message}");
                     Console.WriteLine($"FAIL: Execution failed.");
                     while (PopCall() != null) ;

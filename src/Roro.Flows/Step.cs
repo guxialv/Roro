@@ -2,7 +2,7 @@
 using Roro.Flows.Framework;
 using Roro.Flows.Steps;
 using System;
-using System.Linq;
+using System.Collections;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -10,7 +10,7 @@ namespace Roro.Flows
 {
     public abstract class Step : ViewModel<Flow, StepCollection, Step>, IExecutable
     {
-        internal ParentStep? ParentStep => ParentCollection?.ParentStep;
+        internal Step? ParentStep => ParentCollection?.ParentStep;
 
         protected Step(Flow parent) : base(parent)
         {
@@ -18,6 +18,22 @@ namespace Roro.Flows
 
         protected Step(Flow parent, JsonElement jsonElement) : base(parent)
         {
+            if (jsonElement.TryGetProperty(nameof(SubType), out JsonElement jsonProperty))
+            {
+                SubType = jsonProperty.GetString();
+            }
+            if (jsonElement.TryGetProperty(nameof(Inputs), out jsonProperty))
+            {
+                Inputs = new StepInputCollection(this, jsonProperty);
+            }
+            if (jsonElement.TryGetProperty(nameof(Outputs), out jsonProperty))
+            {
+                Outputs = new StepOutputCollection(this, jsonProperty);
+            }
+            if (jsonElement.TryGetProperty(nameof(Steps), out jsonProperty))
+            {
+                Steps = new StepCollection(Parent, this, jsonProperty);
+            }
         }
 
         internal static Step Create<TStep>(Flow parent) where TStep : Step
@@ -45,10 +61,10 @@ namespace Roro.Flows
                 return new CatchStep(parent);
             if (type == typeof(ThrowStep).Name)
                 return new ThrowStep(parent);
-            if (type == typeof(CallStep).Name)
-                return new CallStep(parent);
             if (type == typeof(CommentStep).Name)
                 return new CommentStep(parent);
+            if (type == typeof(FlowStep).Name)
+                return new FlowStep(parent);
             throw new NotSupportedException();
         }
 
@@ -77,10 +93,10 @@ namespace Roro.Flows
                 return new CatchStep(parent, jsonElement);
             if (type == typeof(ThrowStep).Name)
                 return new ThrowStep(parent, jsonElement);
-            if (type == typeof(CallStep).Name)
-                return new CallStep(parent, jsonElement);
             if (type == typeof(CommentStep).Name)
                 return new CommentStep(parent, jsonElement);
+            if (type == typeof(FlowStep).Name)
+                return new FlowStep(parent, jsonElement);
             throw new NotSupportedException();
         }
 
@@ -88,12 +104,45 @@ namespace Roro.Flows
         {
             writer.WriteStartObject();
             writer.WriteString(nameof(Type), Type);
+            if (SubType != null)
+            {
+                writer.WriteString(nameof(SubType), SubType);
+            }
+            if (Inputs != null)
+            {
+                writer.WritePropertyName(nameof(Inputs));
+                Inputs.ToJson(writer);
+            }
+            if (Outputs != null)
+            {
+                writer.WritePropertyName(nameof(Outputs));
+                Outputs.ToJson(writer);
+            }
+            if (Steps != null)
+            {
+                writer.WritePropertyName(nameof(Steps));
+                Steps.ToJson(writer);
+            }
             writer.WriteEndObject();
         }
 
+        #region IExecutable
+
+        public string Path => Parent.Path + ParentStep?.Path + "/" + (ParentCollection!.IndexOf(this) + 1);
+
         public string Type => GetType().Name;
 
-        public string Number => ParentStep?.Number + "/" + ParentCollection!.IndexOf(this);
+        public virtual string? SubType { get; set; }
+
+        public StepInputCollection? Inputs { get; protected set; }
+
+        public StepOutputCollection? Outputs { get; protected set; }
+
+        public StepCollection? Steps { get; protected set; }
+
+        IEnumerable? IExecutable.Inputs => throw new NotImplementedException();
+
+        IEnumerable? IExecutable.Outputs => throw new NotImplementedException();
 
         async Task<ExecutionResult> IExecutable.ExecuteAsync(ExecutionContext context) => await ExecuteAsync(context);
 
@@ -120,5 +169,7 @@ namespace Roro.Flows
                 }
             }
         }
+
+        #endregion
     }
 }
