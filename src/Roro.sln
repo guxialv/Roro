@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roro.Flows", "Roro.Flows\Ro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roro.Steps", "Roro.Steps\Roro.Steps.csproj", "{8D6F864A-2157-4286-A5B7-5C31AE664DAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roro.Flows.Tests", "Roro.Flows.Tests\Roro.Flows.Tests.csproj", "{5D3DE3E7-7C69-4389-B94E-EA5B82C61D03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roro.Flows.Tests", "Roro.Flows.Tests\Roro.Flows.Tests.csproj", "{5D3DE3E7-7C69-4389-B94E-EA5B82C61D03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataType", "DataType\DataType.csproj", "{039E3A3E-0C2A-4B47-9070-A5BAF5E7F5E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5D3DE3E7-7C69-4389-B94E-EA5B82C61D03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D3DE3E7-7C69-4389-B94E-EA5B82C61D03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D3DE3E7-7C69-4389-B94E-EA5B82C61D03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039E3A3E-0C2A-4B47-9070-A5BAF5E7F5E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039E3A3E-0C2A-4B47-9070-A5BAF5E7F5E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039E3A3E-0C2A-4B47-9070-A5BAF5E7F5E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039E3A3E-0C2A-4B47-9070-A5BAF5E7F5E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
