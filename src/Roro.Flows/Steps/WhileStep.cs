@@ -22,7 +22,7 @@ namespace Roro.Flows.Steps
 
         private async Task<bool> EvaluateAsync(ExecutionContext context)
         {
-            return await Task.FromResult(true);
+            return await Task.FromResult(context.IsFirstEntry);
         }
 
         protected override async Task<ExecutionResult> ExecuteAsync(ExecutionContext context)

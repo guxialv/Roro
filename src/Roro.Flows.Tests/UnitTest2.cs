@@ -23,6 +23,7 @@ namespace Roro.Flows.Tests
             flow1.Steps.AddNew<CatchStep>();
             flow1.Steps.AddNew<CommentStep>();
             flow1.Steps.AddNew<FlowStep>();
+            await app.RunAsync();
             Console.WriteLine(flow1.ToJson());
         }
     }

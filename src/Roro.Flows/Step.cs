@@ -126,9 +126,11 @@ namespace Roro.Flows
             writer.WriteEndObject();
         }
 
+        public StepCollection? Steps { get; protected set; }
+
         #region IExecutable
 
-        public string Path => Parent.Path + ParentStep?.Path + "/" + (ParentCollection!.IndexOf(this) + 1);
+        public string Path => (ParentStep?.Path ?? Parent.Path) + "/" + (ParentCollection!.IndexOf(this) + 1);
 
         public string Type => GetType().Name;
 
@@ -138,11 +140,9 @@ namespace Roro.Flows
 
         public StepOutputCollection? Outputs { get; protected set; }
 
-        public StepCollection? Steps { get; protected set; }
+        IEnumerable? IExecutable.Inputs => Inputs;
 
-        IEnumerable? IExecutable.Inputs => throw new NotImplementedException();
-
-        IEnumerable? IExecutable.Outputs => throw new NotImplementedException();
+        IEnumerable? IExecutable.Outputs => Outputs;
 
         async Task<ExecutionResult> IExecutable.ExecuteAsync(ExecutionContext context) => await ExecuteAsync(context);
 

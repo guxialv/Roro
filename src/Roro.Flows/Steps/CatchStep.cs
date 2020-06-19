@@ -1,4 +1,5 @@
 ﻿using Roro.Flows.Execution;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,13 +22,21 @@ namespace Roro.Flows.Steps
             await Task.CompletedTask;
             if (context.IsFirstEntry)
             {
-                if (Steps!.FirstOrDefault() is Step nextStep)
+                if (!(ParentCollection!.PreviousOrDefault(this) is Step previousStep && previousStep is TryStep))
                 {
-                    context.PushCall(new CallStackFrame(nextStep));
+                    throw new Exception("The CatchStep must be after a TryStep");
+                }
+                if (Steps!.FirstOrDefault() is Step firstStep)
+                {
+                    context.PushCall(new CallStackFrame(firstStep));
                 }
                 else
                 {
                     context.PopCall();
+                    if (ParentCollection!.NextOrDefault(this) is Step nextStep)
+                    {
+                        context.PushCall(new CallStackFrame(nextStep));
+                    }
                 }
             }
             else

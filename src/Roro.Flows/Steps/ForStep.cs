@@ -32,7 +32,7 @@ namespace Roro.Flows.Steps
             {
                 var collection = context.Locals[string.Empty];
             }
-            return await Task.FromResult(true);
+            return await Task.FromResult(context.IsFirstEntry);
         }
 
         protected override async Task<ExecutionResult> ExecuteAsync(ExecutionContext context)

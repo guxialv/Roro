@@ -1,4 +1,5 @@
 ﻿using Roro.Flows.Execution;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,6 +22,10 @@ namespace Roro.Flows.Steps
             await Task.CompletedTask;
             if (context.IsFirstEntry)
             {
+                if (!(ParentCollection!.PreviousOrDefault(this) is Step previousStep && (previousStep is IfStep || previousStep is ElseIfStep)))
+                {
+                    throw new Exception("The ElseStep must be after an IfStep or an ElseIfStep");
+                }
                 if (Steps!.FirstOrDefault() is Step firstStep)
                 {
                     context.PushCall(new CallStackFrame(firstStep));

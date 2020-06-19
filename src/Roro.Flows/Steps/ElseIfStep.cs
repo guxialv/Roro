@@ -29,6 +29,10 @@ namespace Roro.Flows.Steps
         {
             if (context.IsFirstEntry)
             {
+                if (!(ParentCollection!.PreviousOrDefault(this) is Step previousStep && (previousStep is IfStep || previousStep is ElseIfStep)))
+                {
+                    throw new Exception("The ElseIfStep must be after an IfStep or an ElseIfStep");
+                }
                 context.Inputs.Clear(); // set inputs
                 bool evaluateResult;
                 try
