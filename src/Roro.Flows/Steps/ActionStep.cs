@@ -24,16 +24,16 @@ namespace Roro.Flows.Steps
             try
             {
                 await Task.CompletedTask; // execute action here
-                context.PopCall();
-                if (ParentCollection!.NextOrDefault(this) is Step nextStep)
-                {
-                    context.PushCall(new CallStackFrame(nextStep));
-                }
             }
             catch (Exception exception)
             {
                 await ThrowAsync(context, exception);
                 return ExecutionResult.Failed;
+            }
+            context.PopCall();
+            if (ParentCollection!.NextOrDefault(this) is Step nextStep)
+            {
+                context.PushCall(new CallStackFrame(nextStep));
             }
             context.Outputs.Clear(); // get outputs here
             return ExecutionResult.Completed;
