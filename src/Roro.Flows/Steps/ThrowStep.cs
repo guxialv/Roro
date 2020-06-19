@@ -9,7 +9,15 @@ namespace Roro.Flows.Steps
     {
         internal ThrowStep(Flow parent) : base(parent)
         {
-            Inputs = new StepInputCollection(this);
+            Inputs = new StepInputCollection(this)
+            {
+                new StepInput(this)
+                {
+                    Name = "Message",
+                    Type = typeof(string).Name,
+                    Value = string.Empty
+                }
+            };
         }
 
         internal ThrowStep(Flow parent, JsonElement jsonElement) : base(parent, jsonElement)
