@@ -11,7 +11,7 @@ namespace Roro.Flows.Steps
     {
         internal ForStep(Flow parent) : base(parent)
         {
-            SubType = string.Empty;
+            Call = string.Empty;
             Inputs = new StepInputCollection(this);
             Outputs = new StepOutputCollection(this);
             Steps = new StepCollection(Parent, this);

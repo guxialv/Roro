@@ -56,7 +56,7 @@ namespace Roro.Flows
 
         string IExecutable.Type => GetType().Name;
 
-        string? IExecutable.SubType => null;
+        string? IExecutable.Call => null;
 
         IEnumerable? IExecutable.Inputs => Inputs;
 

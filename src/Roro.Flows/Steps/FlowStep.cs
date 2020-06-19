@@ -10,7 +10,7 @@ namespace Roro.Flows.Steps
     {
         internal FlowStep(Flow parent) : base(parent)
         {
-            SubType = string.Empty;
+            Call = string.Empty;
             Inputs = new StepInputCollection(this);
             Outputs = new StepOutputCollection(this);
         }
@@ -26,7 +26,7 @@ namespace Roro.Flows.Steps
                 Flow? flow;
                 try
                 {
-                    var flowPath = SubType!;
+                    var flowPath = Call!;
                     var jsonText = await Parent.Parent.Services.GetShared<IFlowPickerService>()!.GetFileContentsAsync(flowPath);
                     flow = new Flow(Parent.Parent, flowPath, JsonDocument.Parse(jsonText).RootElement);
                 }

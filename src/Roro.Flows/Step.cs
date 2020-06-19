@@ -18,9 +18,9 @@ namespace Roro.Flows
 
         protected Step(Flow parent, JsonElement jsonElement) : base(parent)
         {
-            if (jsonElement.TryGetProperty(nameof(SubType), out JsonElement jsonProperty))
+            if (jsonElement.TryGetProperty(nameof(Call), out JsonElement jsonProperty))
             {
-                SubType = jsonProperty.GetString();
+                Call = jsonProperty.GetString();
             }
             if (jsonElement.TryGetProperty(nameof(Inputs), out jsonProperty))
             {
@@ -104,9 +104,9 @@ namespace Roro.Flows
         {
             writer.WriteStartObject();
             writer.WriteString(nameof(Type), Type);
-            if (SubType != null)
+            if (Call != null)
             {
-                writer.WriteString(nameof(SubType), SubType);
+                writer.WriteString(nameof(Call), Call);
             }
             if (Inputs != null)
             {
@@ -132,7 +132,7 @@ namespace Roro.Flows
 
         public string Type => GetType().Name;
 
-        public virtual string? SubType { get; set; }
+        public virtual string? Call { get; set; }
 
         public StepInputCollection? Inputs { get; protected set; }
 

@@ -9,7 +9,7 @@ namespace Roro.Flows.Execution
 
         public string Type { get; }
 
-        public string? SubType { get; }
+        public string? Call { get; }
 
         public IEnumerable? Inputs { get; }
 

@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Roro.Flows.Steps;
+using System;
 using System.Threading.Tasks;
 
 namespace Roro.Flows.Tests
@@ -15,7 +16,7 @@ namespace Roro.Flows.Tests
             var flow2 = await app.Flows.AddNewAsync();
 
             flow1.Steps.AddNew<ActionStep>();
-            flow1.Steps.AddNew<FlowStep>().SubType = flow2.Path;
+            flow1.Steps.AddNew<FlowStep>().Call = flow2.Path;
             flow1.Steps.AddNew<CommentStep>();
             flow1.Steps.AddNew<ActionStep>();
 
@@ -29,6 +30,7 @@ namespace Roro.Flows.Tests
             await app.RunAsync();
             var countAfterRun = app.Flows.Count;
             Assert.AreEqual(countBeforeRun, countAfterRun);
+            Console.WriteLine(app.Flows.ToJson());
         }
     }
 }
